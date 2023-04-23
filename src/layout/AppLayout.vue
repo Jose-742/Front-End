@@ -69,7 +69,7 @@ const isOutsideClicked = (event) => {
             </div>
             <app-footer></app-footer>
         </div>
-        <app-config></app-config>
+        <!-- <app-config></app-config>  Usado para configurar o sistema usando tamplate branco preto-->
         <div class="layout-mask"></div>
     </div>
 </template>

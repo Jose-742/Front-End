@@ -6,8 +6,11 @@ import AppMenuItem from './AppMenuItem.vue';
 const model = ref([
     {
         label: 'Home',
-        items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
-    },
+        items: [
+            { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
+            { label: 'Prêmio', icon: 'pi pi-fw pi-bookmark', to: '/form/premio' }
+        ]
+    }/*,
     {
         label: 'UI Components',
         items: [
@@ -155,7 +158,7 @@ const model = ref([
                 target: '_blank'
             }
         ]
-    }
+    }*/
 ]);
 </script>
 
@@ -165,12 +168,12 @@ const model = ref([
             <app-menu-item v-if="!item.separator" :item="item" :index="i"></app-menu-item>
             <li v-if="item.separator" class="menu-separator"></li>
         </template>
-        <li>
+     <!--   <li>
             <a href="https://www.primefaces.org/primeblocks-vue/#/" target="_blank">
                 <img src="/layout/images/banner-primeblocks.png" alt="Prime Blocks" class="w-full mt-3" />
             </a>
-        </li>
+        </li> -->
     </ul>
-</template>
+</template> 
 
 <style lang="scss" scoped></style>

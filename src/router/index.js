@@ -14,6 +14,11 @@ const router = createRouter({
                     component: () => import('@/views/Dashboard.vue')
                 },
                 {
+                    path: '/form/premio',
+                    name: 'formPremio',
+                    component: () => import('@/views/paginas/premio/FormPremio.vue')
+                }/*,
+                {
                     path: '/uikit/formlayout',
                     name: 'formlayout',
                     component: () => import('@/views/uikit/FormLayout.vue')
@@ -140,7 +145,7 @@ const router = createRouter({
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/utilities/Documentation.vue')
-                }
+                }*/
             ]
         },
         {
