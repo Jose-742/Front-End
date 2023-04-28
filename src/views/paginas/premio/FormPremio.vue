@@ -1,131 +1,3 @@
-<script >
-import { FilterMatchMode } from 'primevue/api';
-import { ref, onMounted, onBeforeMount } from 'vue';
-import Dialog from 'primevue/dialog';
-import InputText from 'primevue/inputtext';
-import Textarea from 'primevue/textarea';
-import Calendar from 'primevue/calendar';
-import { useToast } from "primevue/usetoast";
-import Button from 'primevue/button';
-import Fieldset from 'primevue/fieldset';
-
-export default {
-    name: 'FormPremio',
-    data() {
-        return {
-            nomeHeader: 'Cadastrar',
-            toast: useToast(),
-            premioDialog: false,
-            deletePremioDialog: false,
-            filters: ref({'global': {value: null, matchMode: FilterMatchMode.CONTAINS},}),
-            submitted: false,
-            premios: null,
-            premio: new Object(),
-            cronograma: new Object()
-        };
-    },
-    methods: { 
-        openNew() {
-           this.nomeHeader = 'Cadastrar'
-           this.premio = new Object();
-           this.cronograma = new Object();
-           this.submitted = false;
-           this.premioDialog = true;         
-        },
-        hideDialog() {
-            this.premioDialog = false;
-            this.submitted = false;
-        },
-        confirmDeletePremio(premio){
-            this.deletePremioDialog = true;
-            this.premio = premio;
-            this.cronograma = premio.cronograma;      
-        },
-        formatDate(value){
-           let data = new Date(value);
-           return data.getDate()+"/"+(data.getMonth()) +"/"+ data.getFullYear();
-        },
-        async getPremios() {
-            const req = await fetch('http://localhost:8080/premio');
-            const data = await req.json();
-            this.premios = data;
-        },
-        async salvarPremio(){
-            this.submitted =true;
-            function anoFormat(value){
-                let date = new Date(value);
-                return date.getFullYear();
-            }
-            const data = {
-                    id: this.premio.id,
-                    nome: this.premio.nome,
-                    descricao: this.premio.descricao,
-                    cronograma:{
-                        id: this.cronograma.id,
-                        dataInicio: this.cronograma.dataInicio,
-                        dataFim:  this.cronograma.dataFim,
-                        descricao: this.cronograma.descricao
-                    }, 
-                    ano: anoFormat(this.premio.ano)
-            }              
-            const dataJson = JSON.stringify(data); // trnasformando o objeto em string json 
-            if(data.id === undefined){
-                const req = await fetch("http://localhost:8080/premio", { // Enviando a requisição
-                    method: "POST",
-                    headers:{ "Content-Type": "application/json" },
-                    body: dataJson
-                });      
-                if(req.status === 201){  // reposta do envio 
-                    this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Cadastrado com sucesso!', life: 3000 });
-                    this.premioDialog = false;}
-            }else {
-                const req = await fetch("http://localhost:8080/premio", { // Enviando a requisição
-                    method: "PUT",
-                    headers:{ "Content-Type": "application/json" },
-                    body: dataJson
-                });      
-                if(req.status === 200){   // reposta do envio 
-                    this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Alterado com sucesso!', life: 3000 });
-                    this.premioDialog = false;}}
-            this.getPremios();
-        },
-        async editarPremio(premio){
-            this.nomeHeader = 'Alterar';
-            const req = await fetch('http://localhost:8080/premio/'+premio.id);
-            if(req.status == 200){
-                const data = await req.json();
-                this.premio = data;
-                this.premio.ano = ""+data.ano;
-                this.cronograma = data.cronograma;
-                this.premioDialog = true;}
-            if(req.status == 404){
-                this.toast.add({ severity: 'error', summary: 'Error!', detail: 'Não foi encontrado o prêmio!', life: 3000 });}
-        },
-        async deletePremio(){
-            const req = await fetch("http://localhost:8080/premio/delete/"+this.premio.id, { // Enviando a requisição
-                method: "DELETE",
-                headers:{ "Content-Type": "application/json" }
-            }); 
-            if(req.status == 204){
-                this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Excluido com sucesso!', life: 3000 });
-                this.deletePremioDialog = false;
-            }
-            this.getPremios();
-        }
-    },
-    mounted() {
-       this.getPremios()
-    },
-    components: {
-        InputText,
-        Textarea,
-        Calendar,
-        Button,
-        Fieldset,
-        Dialog
-    }
-};
-</script>
 
 <template>
     <div class="grid">
@@ -229,12 +101,12 @@ export default {
                             <div class="formgrid grid">
                                 <div class="field col">
                                     <label for="dataInicio">Data início</label>
-                                    <Calendar id="dataInicio" v-model="cronograma.dataInicio" required="true" showIcon :class="{ 'p-invalid': submitted && !cronograma.dataInicio }" />
+                                    <Calendar id="dataInicio" dateFormat="dd/mm/yy" v-model="cronograma.dataInicio" required="true" showIcon :class="{ 'p-invalid': submitted && !cronograma.dataInicio }" />
                                     <small class="p-invalid label-cor" v-if="submitted && !cronograma.dataInicio">A data início é obrigatória.</small>
                                 </div>
                                 <div class="field col">
                                     <label for="dataFim">Data fim</label>
-                                    <Calendar id="dataFim" v-model="cronograma.dataFim" required="true" showIcon :class="{ 'p-invalid': submitted && !cronograma.dataFim}" />
+                                    <Calendar id="dataFim" dateFormat="dd/mm/yy"  v-model="cronograma.dataFim" required="true" showIcon :class="{ 'p-invalid': submitted && !cronograma.dataFim}" />
                                     <small class="p-invalid label-cor" v-if="submitted && !cronograma.dataFim">A data fim é obrigatória.</small>
                                 </div>
                             </div>
@@ -274,6 +146,152 @@ export default {
     </div>
 </template>
 
+<script >
+import { FilterMatchMode } from 'primevue/api';
+import { ref, onMounted, onBeforeMount } from 'vue';
+import Dialog from 'primevue/dialog';
+import InputText from 'primevue/inputtext';
+import Textarea from 'primevue/textarea';
+import Calendar from 'primevue/calendar';
+import { useToast } from "primevue/usetoast";
+import Button from 'primevue/button';
+import Fieldset from 'primevue/fieldset';
+
+export default {
+    name: 'FormPremio',
+    data() {
+        return {
+            nomeHeader: 'Cadastrar',
+            toast: useToast(),
+            premioDialog: false,
+            deletePremioDialog: false,
+            filters: ref({'global': {value: null, matchMode: FilterMatchMode.CONTAINS},}),
+            submitted: false,
+            premios: null,
+            premio: new Object(),
+            cronograma: new Object()
+        };
+    },
+    methods: { 
+        openNew() {
+           this.nomeHeader = 'Cadastrar'
+           this.premio = new Object();
+           this.cronograma = new Object();
+           this.submitted = false;
+           this.premioDialog = true;         
+        },
+        hideDialog() {
+            this.premioDialog = false;
+            this.submitted = false;
+        },
+        confirmDeletePremio(premio){
+            this.deletePremioDialog = true;
+            this.premio = premio;
+            this.cronograma = premio.cronograma;      
+        },
+        formatDate(value){
+            let data = new Date(value);
+            let dataFormatada = data.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
+            return dataFormatada;
+        },
+        formatarStringData(data) {               
+            try {
+                let partes = data.split('/');
+                let dataFormatada = `${partes[2]}-${partes[1].padStart(2, '0')}-${partes[0].padStart(2, '0')}`;
+                return new Date(dataFormatada);
+            } catch (e) {
+                return data;
+            }
+        },
+        formatarAno(value){          
+            if(isNaN(parseInt(value))){
+                let date = new Date(value);
+                return date.getFullYear();
+            }
+            return value;
+        },        
+        async getPremios() {
+            const req = await fetch('http://localhost:8080/premio');
+            const data = await req.json();
+            this.premios = data;
+        },
+        async salvarPremio(){
+            this.submitted =true;                    
+            const data = {
+                    id: this.premio.id,
+                    nome: this.premio.nome,
+                    descricao: this.premio.descricao,
+                    cronograma:{
+                        id: this.cronograma.id,
+                        dataInicio: this.formatarStringData(this.cronograma.dataInicio),
+                        dataFim:  this.formatarStringData(this.cronograma.dataFim),
+                        descricao: this.cronograma.descricao
+                    }, 
+                    ano: this.formatarAno(this.premio.ano)
+            }              
+            const dataJson = JSON.stringify(data); // trnasformando o objeto em string json 
+            if(data.id === undefined){
+                const req = await fetch("http://localhost:8080/premio", { // Enviando a requisição
+                    method: "POST",
+                    headers:{ "Content-Type": "application/json" },
+                    body: dataJson
+                });      
+                if(req.status === 201){  // reposta do envio 
+                    this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Cadastrado com sucesso!', life: 3000 });
+                    this.premioDialog = false;}
+            }else {
+                const req = await fetch("http://localhost:8080/premio", { // Enviando a requisição
+                    method: "PUT",
+                    headers:{ "Content-Type": "application/json" },
+                    body: dataJson
+                });      
+                if(req.status === 200){   // reposta do envio 
+                    this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Alterado com sucesso!', life: 3000 });
+                    this.premioDialog = false;}}
+            this.getPremios();
+        },
+        async editarPremio(premio){
+            this.nomeHeader = 'Alterar';
+            const req = await fetch('http://localhost:8080/premio/'+premio.id);
+            if(req.status == 200){
+                const data = await req.json();
+                this.premio = data;
+                this.premio.ano = ""+data.ano;
+                this.cronograma={
+                        id: data.cronograma.id,
+                        dataInicio: this.formatDate(data.cronograma.dataInicio),
+                        dataFim:  this.formatDate(data.cronograma.dataFim),
+                        descricao: data.cronograma.descricao
+                };
+                this.premioDialog = true;}
+            if(req.status == 404){
+                this.toast.add({ severity: 'error', summary: 'Error!', detail: 'Não foi encontrado o prêmio!', life: 3000 });}
+        },
+        async deletePremio(){
+            const req = await fetch("http://localhost:8080/premio/delete/"+this.premio.id, { // Enviando a requisição
+                method: "DELETE",
+                headers:{ "Content-Type": "application/json" }
+            }); 
+            if(req.status == 204){
+                this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Excluido com sucesso!', life: 3000 });
+                this.deletePremioDialog = false;
+            }
+            this.getPremios();
+        }
+    },
+    mounted() {
+       this.getPremios()
+    },
+    components: {
+        InputText,
+        Textarea,
+        Calendar,
+        Button,
+        Fieldset,
+        Dialog
+    }
+};
+</script>
 <style scoped lang="scss">
 .label-cor{
     color: red;
