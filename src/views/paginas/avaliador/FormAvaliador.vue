@@ -137,7 +137,7 @@
                                 <small class="p-invalid label-cor" v-if="submitted && !avaliador.cpf">O CPF é obrigatório.</small>
                             </div>
                             <div class="field col-6">
-                                <label for="cpf">Data nascimento</label>
+                                <label for="dataNascimento">Data nascimento</label>
                                 <Calendar id="dataNascimento" dateFormat="dd/mm/yy" v-model="avaliador.dataNascimento" required="true" showIcon :class="{ 'p-invalid': submitted && !avaliador.dataNascimento}" />
                                 <small class="p-invalid label-cor" v-if="submitted && !avaliador.dataNascimento">A data de nascimento é obrigatória.</small>
                             </div>
