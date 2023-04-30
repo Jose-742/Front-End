@@ -30,7 +30,7 @@
                         </div>
                     </template>
                
-                        <Column headerStyle="width: 3rem"></Column>
+                        <!-- <Column headerStyle="width: 3rem"></Column> -->
                         <Column expander style="width: 5rem" />
                       <!--  <Column field="id" header="ID" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
@@ -38,6 +38,11 @@
                                 {{ slotProps.data.id }}
                             </template>
                         </Column>-->  
+                        <Column field="perfil" header="Perfil"  headerStyle="width:3%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <img :alt="slotProps.data.nome" :src="'demo/images/avatar/user2.png'" width="32" style="vertical-align: middle" />
+                            </template>
+                        </Column> 
                         <Column field="nome" header="Nome completo" :sortable="true" headerStyle="width:15%; min-width:10rem;">
                             <template #body="slotProps">
                                 <span class="p-column-title">Nome completo</span>
@@ -88,29 +93,30 @@
                         </Column> 
                         <template #expansion="slotProps">
                             <div class="p-3">
-                                <h5>Endereço {{ slotProps.data.nome }}</h5>
-                                <div class="formgrid grid">
-                                    <div class="field col-2">
-                                        <h6>CEP</h6>
-                                        <label for="cep">{{slotProps.data.endereco.cep  }}</label>
+                                <Fieldset legend="Endereço">
+                                    <div class="formgrid grid">
+                                        <div class="field col-2">
+                                            <h6>CEP</h6>
+                                            <label for="cep">{{slotProps.data.endereco.cep  }}</label>
+                                        </div>
+                                        <div class="field col-4">
+                                            <h6>Logradouro</h6>
+                                            <label for="logradouro">{{slotProps.data.endereco.logradouro }}</label>
+                                        </div>
+                                        <div class="field col-3">
+                                            <h6>Bairro</h6>
+                                            <label for="bairro">{{slotProps.data.endereco.bairro }}</label>
+                                        </div>
+                                        <div class="field col-2">
+                                            <h6>Localidade</h6>
+                                            <label for="localidade">{{slotProps.data.endereco.localidade }}</label>
+                                        </div>
+                                        <div class="field col-1">
+                                            <h6>UF</h6>
+                                            <label for="uf">{{slotProps.data.endereco.uf }}</label>
+                                        </div>
                                     </div>
-                                    <div class="field col-4">
-                                        <h6>Logradouro</h6>
-                                        <label for="logradouro">{{slotProps.data.endereco.logradouro }}</label>
-                                    </div>
-                                    <div class="field col-3">
-                                        <h6>Bairro</h6>
-                                        <label for="bairro">{{slotProps.data.endereco.bairro }}</label>
-                                    </div>
-                                    <div class="field col-2">
-                                        <h6>Localidade</h6>
-                                        <label for="localidade">{{slotProps.data.endereco.localidade }}</label>
-                                    </div>
-                                    <div class="field col-1">
-                                        <h6>UF</h6>
-                                        <label for="uf">{{slotProps.data.endereco.uf }}</label>
-                                    </div>
-                                </div>
+                                </Fieldset>
                             </div>
                         </template>
              
