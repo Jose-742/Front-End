@@ -17,6 +17,11 @@ const router = createRouter({
                     path: '/form/premio',
                     name: 'formPremio',
                     component: () => import('@/views/paginas/premio/FormPremio.vue')
+                },
+                {
+                    path: '/form/avaliador',
+                    name: 'formAvaliador',
+                    component: () => import('@/views/paginas/premio/FormAvaliador.vue')
                 }/*,
                 {
                     path: '/uikit/formlayout',
