@@ -239,7 +239,7 @@ import Button from 'primevue/button';
 import Fieldset from 'primevue/fieldset';
 
 export default {
-    name: 'FormAutor',
+    name: 'FormuAutor',
     data() {
         return {
             nomeHeader: 'Cadastrar',
