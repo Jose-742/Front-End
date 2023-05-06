@@ -311,7 +311,7 @@ export default {
             
         },  
         async getAutores() {
-            const req = await fetch('http://academiaelite.com.br:6612/autor');
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/autor');
             const data = await req.json();
             this.autores = data;
         },
@@ -336,7 +336,7 @@ export default {
             }              
             const dataJson = JSON.stringify(data); // trnasformando o objeto em string json 
             if(data.id === undefined){
-                const req = await fetch("http://academiaelite.com.br:6612/autor", { // Enviando a requisição
+                const req = await fetch("https://jose2550.c41.integrator.host/backend/autor", { // Enviando a requisição
                     method: "POST",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -345,7 +345,7 @@ export default {
                     this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Cadastrado com sucesso!', life: 3000 });
                     this.autorDialog = false;}
             }else {
-                const req = await fetch("http://academiaelite.com.br:6612/autor", { // Enviando a requisição
+                const req = await fetch("https://jose2550.c41.integrator.host/backend/autor", { // Enviando a requisição
                     method: "PUT",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -357,7 +357,7 @@ export default {
         },
         async editarAutor(autor){
             this.nomeHeader = 'Alterar';
-            const req = await fetch('http://academiaelite.com.br:6612/autor/'+autor.id);
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/autor/'+autor.id);
             if(req.status == 200){
                 const data = await req.json();
                 this.autor = data;
@@ -368,7 +368,7 @@ export default {
                 this.toast.add({ severity: 'error', summary: 'Error!', detail: 'Não foi encontrado autor!', life: 3000 });}
         },
         async deleteAutor(){
-            const req = await fetch("http://academiaelite.com.br:6612/autor/delete/"+this.autor.id, { // Enviando a requisição
+            const req = await fetch("https://jose2550.c41.integrator.host/backend/autor/delete/"+this.autor.id, { // Enviando a requisição
                 method: "DELETE",
                 headers:{ "Content-Type": "application/json" }
             }); 

@@ -211,7 +211,7 @@ export default {
             return value;
         },        
         async getPremios() {
-            const req = await fetch('http://academiaelite.com.br:6612/premio');
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/premio');
             const data = await req.json();
             this.premios = data;
         },
@@ -231,7 +231,7 @@ export default {
             }              
             const dataJson = JSON.stringify(data); // trnasformando o objeto em string json 
             if(data.id === undefined){
-                const req = await fetch("http://academiaelite.com.br:6612/premio", { // Enviando a requisição
+                const req = await fetch("https://jose2550.c41.integrator.host/backend/premio", { // Enviando a requisição
                     method: "POST",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -240,7 +240,7 @@ export default {
                     this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Cadastrado com sucesso!', life: 3000 });
                     this.premioDialog = false;}
             }else {
-                const req = await fetch("http://academiaelite.com.br:6612/premio", { // Enviando a requisição
+                const req = await fetch("https://jose2550.c41.integrator.host/backend/premio", { // Enviando a requisição
                     method: "PUT",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -252,7 +252,7 @@ export default {
         },
         async editarPremio(premio){
             this.nomeHeader = 'Alterar';
-            const req = await fetch('http://academiaelite.com.br:6612/premio/'+premio.id);
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/premio/'+premio.id);
             if(req.status == 200){
                 const data = await req.json();
                 this.premio = data;
@@ -268,7 +268,7 @@ export default {
                 this.toast.add({ severity: 'error', summary: 'Error!', detail: 'Não foi encontrado o prêmio!', life: 3000 });}
         },
         async deletePremio(){
-            const req = await fetch("http://academiaelite.com.br:6612/premio/delete/"+this.premio.id, { // Enviando a requisição
+            const req = await fetch("https://jose2550.c41.integrator.host/backend/premio/delete/"+this.premio.id, { // Enviando a requisição
                 method: "DELETE",
                 headers:{ "Content-Type": "application/json" }
             }); 

@@ -234,13 +234,13 @@ export default {
             }
         },
         async getProjetos() {
-            const req = await fetch('http://academiaelite.com.br:6612/projeto');
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/projeto');
             if(req.status == 200){
                 const data = await req.json();
                 this.projetos = data;}
         },
         async getAutores() {
-            const req = await fetch('http://academiaelite.com.br:6612/autor');
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/autor');
             if(req.status == 200){
                 const data = await req.json();
                 const arrayAutor = new Array()
@@ -263,7 +263,7 @@ export default {
             }              
             const dataJson = JSON.stringify(data); // trnasformando o objeto em string json 
             if(data.id === undefined){
-                const req = await fetch("http://academiaelite.com.br:6612/projeto", { // Enviando a requisição
+                const req = await fetch("https://jose2550.c41.integrator.host/backend/projeto", { // Enviando a requisição
                     method: "POST",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -272,7 +272,7 @@ export default {
                     this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Cadastrado com sucesso!', life: 3000 });
                     this.projetoDialog = false;}
             }else {
-                const req = await fetch("http://academiaelite.com.br:6612/projeto", { // Enviando a requisição
+                const req = await fetch("https://jose2550.c41.integrator.host/backend/projeto", { // Enviando a requisição
                     method: "PUT",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -286,7 +286,7 @@ export default {
         },
         async editarProjeto(projeto){
             this.nomeHeader = 'Alterar';
-            const req = await fetch('http://academiaelite.com.br:6612/projeto/'+projeto.id);
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/projeto/'+projeto.id);
             if(req.status == 200){
                 const data = await req.json();
                 this.projeto = data;
@@ -329,7 +329,7 @@ export default {
            
         },
         async deleteProjeto(){
-            const req = await fetch("http://academiaelite.com.br:6612/projeto/delete/"+this.projeto.id, { // Enviando a requisição
+            const req = await fetch("https://jose2550.c41.integrator.host/backend/projeto/delete/"+this.projeto.id, { // Enviando a requisição
                 method: "DELETE",
                 headers:{ "Content-Type": "application/json" }
             }); 
