@@ -315,7 +315,7 @@ export default {
             
         },  
         async getAvaliadores() {
-            const req = await fetch('http://localhost:8080/avaliador');
+            const req = await fetch('http://academiaelite.com.br:6612/avaliador');
             const data = await req.json();
             this.avaliadores = data;
         },
@@ -342,7 +342,7 @@ export default {
             }              
             const dataJson = JSON.stringify(data); // trnasformando o objeto em string json 
             if(data.id === undefined){
-                const req = await fetch("http://localhost:8080/avaliador", { // Enviando a requisição
+                const req = await fetch("http://academiaelite.com.br:6612/avaliador", { // Enviando a requisição
                     method: "POST",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -351,7 +351,7 @@ export default {
                     this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Cadastrado com sucesso!', life: 3000 });
                     this.avaliadorDialog = false;}
             }else {
-                const req = await fetch("http://localhost:8080/avaliador", { // Enviando a requisição
+                const req = await fetch("http://academiaelite.com.br:6612/avaliador", { // Enviando a requisição
                     method: "PUT",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -363,7 +363,7 @@ export default {
         },
         async editarAvaliador(avaliador){
             this.nomeHeader = 'Alterar';
-            const req = await fetch('http://localhost:8080/avaliador/'+avaliador.id);
+            const req = await fetch('http://academiaelite.com.br:6612/avaliador/'+avaliador.id);
             if(req.status == 200){
                 const data = await req.json();
                 this.avaliador = data;
@@ -375,7 +375,7 @@ export default {
                 this.toast.add({ severity: 'error', summary: 'Error!', detail: 'Não foi encontrado o prêmio!', life: 3000 });}
         },
         async deleteAvaliador(){
-            const req = await fetch("http://localhost:8080/avaliador/delete/"+this.avaliador.id, { // Enviando a requisição
+            const req = await fetch("http://academiaelite.com.br:6612/avaliador/delete/"+this.avaliador.id, { // Enviando a requisição
                 method: "DELETE",
                 headers:{ "Content-Type": "application/json" }
             }); 
