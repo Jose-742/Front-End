@@ -2,7 +2,6 @@
      <div class="grid">
         <div class="col-12 lg:col-12 xl:col-12">
             <div class="card mb-0  align-items-center">
-                <span class="text-green-500 font-medium  align-items-center">Página principal Home</span>
                 <h1 for="chart">Gráfico de projetos</h1>
                 <div class="card flex justify-content-center">
                      <Chart id="chart" type="doughnut" :data="chartData" :options="chartOptions" class="w-full md:w-30rem" />
