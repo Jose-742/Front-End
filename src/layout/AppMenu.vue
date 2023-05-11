@@ -11,7 +11,8 @@ const model = ref([
             { label: 'Prêmios', icon: 'pi pi-fw pi-bookmark', to: '/form/premio' },
             { label: 'Avaliadores', icon: 'pi pi-fw pi-user-edit', to: '/form/avaliador' },
             { label: 'Autores', icon: 'pi pi-fw pi-users', to: '/form/autor' },
-            { label: 'Projetos', icon: 'pi pi-fw pi-file-edit', to: '/form/projeto' }
+            { label: 'Projetos', icon: 'pi pi-fw pi-file-edit', to: '/form/projeto' },
+            { label: 'Avaliação', icon: 'pi pi-fw pi-verified', to: '/form/avaliacao' }
         ]
     }/*,
     {
