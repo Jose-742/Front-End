@@ -76,29 +76,50 @@
                         <template #expansion="slotProps">
                             <div class="orders-subtable">
                                 <!-- <h5>Orders for {{slotProps.data.titulo}}</h5> -->
-                                <DataTable :value="slotProps.data.autores">
-                                    <Column field="perfil" header="Perfil">
-                                        <template #body="slotProps">
-                                            <img :alt="slotProps.data.nome" :src="'demo/images/avatar/user.png'" width="32" style="vertical-align: middle" />
-                                        </template>
-                                    </Column>
-                                    <Column field="nome sobrenome" header="Nome completo" sortable>
-                                        <template #body="slotProps">
-                                            <span class="p-column-title">Nome completo</span> 
-                                            {{ slotProps.data.nome }} {{slotProps.data.sobrenome }}
-                                        </template>
-                                    </Column>
-                                    <Column field="cpf" header="CPF" sortable></Column>
-                                    <Column field="dataNascimento" header="Data nascimento" sortable>
-                                        <template #body="slotProps">
-                                            <span class="p-column-title">Data nascimento</span>
-                                            {{ formatDate(slotProps.data.dataNascimento) }}
-                                        </template>
-                                    </Column>
-                                    <Column field="telefone" header="Contato" sortable></Column>
-                                    <Column field="email" header="E-mail" sortable></Column>
-                                </DataTable>
-                            </div>                               
+                                <Fieldset legend="Autores">
+                                    <DataTable :value="slotProps.data.autores">
+                                        <Column field="perfil" header="Perfil">
+                                            <template #body="slotProps">
+                                                <img :alt="slotProps.data.nome" :src="'demo/images/avatar/user.png'" width="32" style="vertical-align: middle" />
+                                            </template>
+                                        </Column>
+                                        <Column field="nome sobrenome" header="Nome completo" sortable>
+                                            <template #body="slotProps">
+                                                <span class="p-column-title">Nome completo</span> 
+                                                {{ slotProps.data.nome }} {{slotProps.data.sobrenome }}
+                                            </template>
+                                        </Column>
+                                        <Column field="cpf" header="CPF" sortable></Column>
+                                        <Column field="dataNascimento" header="Data nascimento" sortable>
+                                            <template #body="slotProps">
+                                                <span class="p-column-title">Data nascimento</span>
+                                                {{ formatDate(slotProps.data.dataNascimento) }}
+                                            </template>
+                                        </Column>
+                                        <Column field="telefone" header="Contato" sortable></Column>
+                                        <Column field="email" header="E-mail" sortable></Column>
+                                    </DataTable>
+                                </Fieldset>
+                            </div>       
+                                <div class="field"  v-if="slotProps.data.premio != null">
+                                    <Fieldset legend="Prêmio">
+                                        <div class="formgrid grid">
+                                            <div class="field col-5">
+                                                <h6>Nome</h6>
+                                                <label for="projeto">{{slotProps.data.premio.nome }}</label>
+                                            </div>
+                                            <div class="field col-5">
+                                                <h6>Descrição</h6>
+                                                <label for="projeto">{{slotProps.data.premio.descricao }}</label>
+                                            </div>
+                                            <div class="field col-2">
+                                                <h6>Ano</h6>
+                                                <label for="projeto">{{slotProps.data.premio.ano }}</label>
+                                            </div>
+                                            
+                                        </div>
+                                    </Fieldset>
+                                </div>                      
                         </template>
         
                 </DataTable>
