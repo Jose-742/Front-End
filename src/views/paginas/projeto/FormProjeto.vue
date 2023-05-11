@@ -100,7 +100,8 @@
                                         <Column field="email" header="E-mail" sortable></Column>
                                     </DataTable>
                                 </Fieldset>
-                            </div>       
+                            </div>
+                            <div class="field"></div>       
                                 <div class="field"  v-if="slotProps.data.premio != null">
                                     <Fieldset legend="Prêmio">
                                         <div class="formgrid grid">
