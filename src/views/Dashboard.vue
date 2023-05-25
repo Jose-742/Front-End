@@ -1,7 +1,12 @@
 <template>
     <div class="grid">
         <div class="col-12 lg:col-12 xl:col-12">
-            <div class="card mb-0  align-items-center">
+            <div v-show="loading" class="card mb-0  align-items-center">
+                <div class="card flex justify-content-center">
+                    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i> 
+                </div>
+            </div>
+            <div v-show="!loading" class="card mb-0  align-items-center">
                 <h1 for="chart">Gráfico de projetos</h1>
                 <div class="card flex justify-content-center">
                      <Chart id="chart" type="doughnut" :data="chartData" :options="chartOptions" class="w-full md:w-30rem" />
@@ -16,6 +21,7 @@ import { ref, onMounted } from "vue";
 let projetos = []
 let contAvaliado = 0;
 let contEnviado = 0;
+let loading = true;
 
 onMounted(() => {
     fetchProjetos();   
@@ -23,12 +29,16 @@ onMounted(() => {
 
 async function fetchProjetos() {
     const req = await fetch('http://localhost:8080/projeto');
-    const data = await req.json();
-    projetos = data;
-    for(let i=0; i<projetos.length; i++){
-        if(projetos[i].status === "AVALIADO"){contAvaliado++}else{contEnviado++}
+    if(req.status == 200){   
+        const data = await req.json();
+        projetos = data;
+        
+        for(let i=0; i<projetos.length; i++){
+            if(projetos[i].status === "AVALIADO"){contAvaliado++}else{contEnviado++}
+        }
+        chartData.value = setChartData();
+        loading = false;
     }
-    chartData.value = setChartData();
   }
 
 const chartData = ref();
