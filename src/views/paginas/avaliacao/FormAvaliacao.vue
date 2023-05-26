@@ -35,26 +35,43 @@
                      
                         <Column field="Parecer" header="Parecer" :sortable="true" headerStyle="width:55%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Parecer</span> 
-                                {{ slotProps.data.parecer}}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.parecer}}
+                                </span>
                             </template>
                         </Column> 
                         <Column field="nota" header="Nota" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Nota</span> 
-                                {{ slotProps.data.nota }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.nota }}
+                                </span>
                             </template>
                         </Column>
                         <Column field="dataAvaliacao" header="Data avaliação" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Data Avaliação</span>
-                                {{ formatDate(slotProps.data.dataAvaliacao) }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ formatDate(slotProps.data.dataAvaliacao) }}
+                                </span>
                             </template>
                         </Column>
                         <Column  headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editarAvaliacao(slotProps.data)" />
-                                <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2" @click="confirmDeleteAvaliacao(slotProps.data)" />
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editarAvaliacao(slotProps.data)" />
+                                    <Button icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDeleteAvaliacao(slotProps.data)" />
+                                </span>
                             </template>
                         </Column>
                         <template #expansion="slotProps">
@@ -123,13 +140,13 @@
              
                 </DataTable>
 
-                <Dialog v-model:visible="avaliacaoDialog" :style="{ width: '700px' }" :header="nomeHeader" :modal="true" class="p-fluid">
+                <Dialog v-model:visible="avaliacaoDialog" :style="{ width: '700px' }"  :header="nomeHeader" :modal="true" class="p-fluid">
                     <Fieldset legend="Avaliação">
                         <div class="field">
                             <Fieldset legend="Prêmio">
 
                                 <DataTable v-model:selection="selectPremio" :value="premios" class="p-datatable-sm" dataKey="id"
-                                    responsiveLayout="scroll" tableStyle="min-width: 10rem">
+                                    responsiveLayout="scroll" tableStyle="min-width: 5rem">
                                         <Column selectionMode="single" headerStyle="width: 3rem"></Column>
                                         <Column field="titulo" header="Título" :sortable="true" headerStyle="width:60%; min-width:1rem;">
                                             <template #body="slotProps">
@@ -151,7 +168,7 @@
                         <div class="field">
                             <Fieldset legend="Avaliador">
                                 
-                                    <DataTable v-model:selection="selectAvaliador" :value="avaliadores" class="p-datatable-sm" dataKey="id"
+                                    <DataTable v-model:selection="selectAvaliador" :value="avaliadores" class="p-datatable-sm" dataKey="id" style="width: 100%;"
                                     responsiveLayout="scroll" tableStyle="min-width: 10rem">
                                         <Column selectionMode="single" headerStyle="width: 3rem"></Column>
                                         <Column field="perfil" header="Perfil"  headerStyle="width:13%; min-width:3rem;">
@@ -249,6 +266,7 @@ import Calendar from 'primevue/calendar';
 import { useToast } from "primevue/usetoast";
 import Button from 'primevue/button';
 import Fieldset from 'primevue/fieldset';
+import Skeleton from 'primevue/skeleton';
 
 export default {
     name: 'FormuAutor',
@@ -261,7 +279,7 @@ export default {
             filters: ref({'global': {value: null, matchMode: FilterMatchMode.CONTAINS},}),
             expandedRows: ref([]),
             submitted: false,
-            avaliacoes: null,
+            avaliacoes: ref(new Array(4)),
             avaliacao: new Object(),
             avaliadores: null,
             projetos: null,
@@ -422,7 +440,8 @@ export default {
         Calendar,
         Button,
         Fieldset,
-        Dialog
+        Dialog,
+        Skeleton
     }
 };
 </script>

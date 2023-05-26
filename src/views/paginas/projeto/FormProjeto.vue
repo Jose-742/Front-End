@@ -10,7 +10,7 @@
                         </div>
                     </template>
                 </Toolbar>
-                <DataTable v-model:expandedRows="expandedRows" :value="projetos" dataKey="id" tableStyle="min-width: 60rem"
+                <DataTable v-model:expandedRows="expandedRows" :value="projetos" dataKey="id" tableStyle="min-width: 60rem" v-if="!tabela"
                     :paginator="true"
                     :rows="10"
                     :filters="filters"
@@ -20,7 +20,14 @@
                     responsiveLayout="scroll">
                     <template #header>
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                            <h5 class="m-0">Gerenciar projetos</h5>
+                            <h5 class="m-0">Gerenciar projetos</h5> 
+                            <span>
+                                <Button @click="getProjetosEnviados()" icon="pi pi-send" class="mr-1"  severity="info" rounded  aria-label="Enviados" title="Enviados" />
+                                <Button @click="getProjetosAvaliados()" icon="pi pi-check-circle" class="mr-1" severity="success" rounded aria-label="Avaliados" title="Avaliados" />
+                                <Button @click="getProjetosVencedores()" icon="pi pi-star-fill" class="mr-1" severity="warning"  rounded aria-label="Vencedores" title="Vencedores"/>
+                                <Button @click="getProjetos()" icon="pi pi-filter-slash" class="mr-1" severity="secondary"  rounded aria-label="Limpar" title="Limpar"/>
+                            </span>    
+                           
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />                              
                                 <InputText v-model="filters['global'].value" placeholder="Buscar..." /> 
@@ -38,39 +45,64 @@
                         </Column>-->  
                         <Column field="area" header="Área" :sortable="true" headerStyle="width:15%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Área</span> 
-                                {{ slotProps.data.area }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.area }}
+                                </span>
                             </template>
                         </Column> 
                         <Column field="titulo" header="Título" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Título</span>
-                                {{ slotProps.data.titulo }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.titulo }}
+                                </span>
                             </template>
                         </Column>
                         <Column field="resumo" header="Resumo" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Resumo</span>
-                                {{ slotProps.data.resumo }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.resumo }}
+                                </span>
                             </template>
                         </Column>
                         <Column field="dataEnvio" header="Data envio" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Data envio</span>
-                                {{ formatDate(slotProps.data.dataEnvio) }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ formatDate(slotProps.data.dataEnvio) }}
+                                </span>
                             </template>
                         </Column> 
                         <Column field="status" header="Status" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Status</span>
-                                <Tag v-if="slotProps.data.status == 'ENVIADO'" class="mr-2" severity="info" value="Info">{{slotProps.data.status }}</Tag>
-                                <Tag v-else class="mr-2" severity="success" value="Success">{{slotProps.data.status }}</Tag>
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    <Tag v-if="slotProps.data.status == 'ENVIADO'" class="mr-2" severity="info" value="Info">{{slotProps.data.status }}</Tag>
+                                    <Tag v-else class="mr-2" severity="success" value="Success">{{slotProps.data.status }}</Tag>
+                                </span>
                             </template>
                         </Column>
                         <Column  headerStyle="min-width:10rem;">
                             <template #body="slotProps">
-                                <Button icon="pi pi-pencil" v-if="slotProps.data.status == 'ENVIADO'" class="p-button-rounded p-button-success mr-2" @click="editarProjeto(slotProps.data)" />
-                                <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2" @click="confirmDeleteProjeto(slotProps.data)" />
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    <Button icon="pi pi-pencil" v-if="slotProps.data.status == 'ENVIADO'" class="p-button-rounded p-button-success mr-2" @click="editarProjeto(slotProps.data)" />
+                                    <Button icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDeleteProjeto(slotProps.data)" />
+                                </span>
                             </template>
                         </Column> 
                         <template #expansion="slotProps">
@@ -120,7 +152,196 @@
                                             
                                         </div>
                                     </Fieldset>
-                                </div>                      
+                                </div>    
+                            <div class="field"></div>    
+                            <div class="field"  v-if="false"> <!--  v-if="slotProps.data.premio != null" -->
+                                    <Fieldset legend="Avaliação">
+                                        <div class="formgrid grid">
+                                            <div class="field col-5">
+                                                <h6>Nome</h6>
+                                                <label for="projeto">{{slotProps.data.premio.nome }}</label>
+                                            </div>
+                                            <div class="field col-5">
+                                                <h6>Descrição</h6>
+                                                <label for="projeto">{{slotProps.data.premio.descricao }}</label>
+                                            </div>
+                                            <div class="field col-2">
+                                                <h6>Ano</h6>
+                                                <label for="projeto">{{slotProps.data.premio.ano }}</label>
+                                            </div>
+                                            
+                                        </div>
+                                    </Fieldset>
+                                </div>                       
+                        </template>
+        
+                </DataTable>
+                        <!-- tabela de avaliados e vencedores -->
+                <DataTable v-model:expandedRows="expandedRows" :value="projetos" dataKey="id" tableStyle="min-width: 60rem" v-if="tabela"
+                    :paginator="true"
+                    :rows="10"
+                    :filters="filters"
+                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                    :rowsPerPageOptions="[5, 10, 25]"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} projetos"
+                    responsiveLayout="scroll">
+                    <template #header>
+                        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                            <h5 class="m-0">Gerenciar projetos</h5> 
+                            <span>
+                                <Button @click="getProjetosEnviados()" icon="pi pi-send" class="mr-1"  severity="info" rounded  aria-label="Enviados" title="Enviados" />
+                                <Button @click="getProjetosAvaliados()" icon="pi pi-check-circle" class="mr-1" severity="success" rounded aria-label="Avaliados" title="Avaliados" />
+                                <Button @click="getProjetosVencedores()" icon="pi pi-star-fill" class="mr-1" severity="warning"  rounded aria-label="Vencedores" title="Vencedores"/>
+                                <Button @click="getProjetos()" icon="pi pi-filter-slash" class="mr-1" severity="secondary"  rounded aria-label="Limpar" title="Limpar"/>
+                            </span> 
+
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search" />                              
+                                <InputText v-model="filters['global'].value" placeholder="Buscar..." /> 
+                            </span>
+                        </div>
+                    </template>
+                        <Column expander style="width: 5rem" />
+                        <Column field="area" header="Área" :sortable="true" headerStyle="width:15%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.projeto.area }}
+                                </span>
+                            </template>
+                        </Column> 
+                        <Column field="titulo" header="Título" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.projeto.titulo }}
+                                </span>
+                            </template>
+                        </Column>
+                        <Column field="resumo" header="Resumo" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.projeto.resumo }}
+                                </span>
+                            </template>
+                        </Column>
+                        <Column field="dataEnvio" header="Data envio" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ formatDate(slotProps.data.projeto.dataEnvio) }}
+                                </span>
+                            </template>
+                        </Column> 
+                        <Column field="status" header="Status" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                            <template #body="slotProps">
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    <Tag v-if="slotProps.data.projeto.status == 'ENVIADO'" class="mr-2" severity="info" value="Info">{{slotProps.data.projeto.status }}</Tag>
+                                    <Tag v-else class="mr-2" severity="success" value="Success">{{slotProps.data.projeto.status }}</Tag>
+                                </span>
+                            </template>
+                        </Column>
+                        <Column field="nota" header="Nota" :sortable="true" headerStyle="width:14%; min-width:10rem;" v-if="nota">
+                            <template #body="slotProps">
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.nota }}
+                                </span>
+                            </template>
+                        </Column>
+                        <Column  headerStyle="min-width:10rem;">
+                            <template #body="slotProps">
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    <Button icon="pi pi-pencil" v-if="slotProps.data.projeto.status == 'ENVIADO'" class="p-button-rounded p-button-success mr-2" @click="editarProjeto(slotProps.data.projeto)" />
+                                    <Button icon="pi pi-trash"  v-if="slotProps.data.projeto.status == 'ENVIADO'"  class="p-button-rounded p-button-warning mt-2" @click="confirmDeleteProjeto(slotProps.data.projeto)" />
+                                </span>
+                                </template>
+                        </Column> 
+                        <template #expansion="slotProps">
+                            <div class="orders-subtable">
+                                <!-- <h5>Orders for {{slotProps.data.titulo}}</h5> -->
+                                <Fieldset legend="Autores">
+                                    <DataTable :value="slotProps.data.projeto.autores">
+                                        <Column field="perfil" header="Perfil">
+                                            <template #body="slotProps">
+                                                <img :alt="slotProps.data.nome" :src="'demo/images/avatar/user.png'" width="32" style="vertical-align: middle" />
+                                            </template>
+                                        </Column>
+                                        <Column field="nome sobrenome" header="Nome completo" sortable>
+                                            <template #body="slotProps">
+                                                <span class="p-column-title">Nome completo</span> 
+                                                {{ slotProps.data.nome }} {{slotProps.data.sobrenome }}
+                                            </template>
+                                        </Column>
+                                        <Column field="cpf" header="CPF" sortable></Column>
+                                        <Column field="dataNascimento" header="Data nascimento" sortable>
+                                            <template #body="slotProps">
+                                                <span class="p-column-title">Data nascimento</span>
+                                                {{ formatDate(slotProps.data.dataNascimento) }}
+                                            </template>
+                                        </Column>
+                                        <Column field="telefone" header="Contato" sortable></Column>
+                                        <Column field="email" header="E-mail" sortable></Column>
+                                    </DataTable>
+                                </Fieldset>
+                            </div>
+                            <div class="field"></div>       
+                                <div class="field"  v-if="slotProps.data.projeto.premio != null">
+                                    <Fieldset legend="Prêmio">
+                                        <div class="formgrid grid">
+                                            <div class="field col-5">
+                                                <h6>Nome</h6>
+                                                <label for="projeto">{{slotProps.data.projeto.premio.nome }}</label>
+                                            </div>
+                                            <div class="field col-5">
+                                                <h6>Descrição</h6>
+                                                <label for="projeto">{{slotProps.data.projeto.premio.descricao }}</label>
+                                            </div>
+                                            <div class="field col-2">
+                                                <h6>Ano</h6>
+                                                <label for="projeto">{{slotProps.data.projeto.premio.ano }}</label>
+                                            </div>
+                                            
+                                        </div>
+                                    </Fieldset>
+                                </div>    
+                            <div class="field"></div>    
+                            <div class="field">
+                                    <Fieldset legend="Avaliação">
+                                        <div class="formgrid grid">
+                                            <div class="field col-5">
+                                                <h6>Parecer</h6>
+                                                <label for="projeto">{{slotProps.data.parecer }}</label>
+                                            </div>
+                                            <div class="field col-5">
+                                                <h6>Nota</h6>
+                                                <label for="projeto">{{slotProps.data.nota }}</label>
+                                            </div>
+                                            <div class="field col-2">
+                                                <h6>Data avaliação</h6>
+                                                <label for="projeto">{{formatDate(slotProps.data.dataAvaliacao) }}</label>
+                                            </div>
+                                            
+                                        </div>
+                                    </Fieldset>
+                                </div>                       
                         </template>
         
                 </DataTable>
@@ -206,6 +427,7 @@ import { useToast } from "primevue/usetoast";
 import Button from 'primevue/button';
 import Fieldset from 'primevue/fieldset';
 import PickList from 'primevue/picklist';
+import Skeleton from 'primevue/skeleton';
 
 export default {
     name: 'FormProjeto',
@@ -214,13 +436,15 @@ export default {
             active:0,
             nomeHeader: 'Cadastrar',
             submitted: false,
+            tabela:false,
+            nota:false,
             toast: useToast(),
             projetoDialog: false,
             deleteProjetoDialog: false,
             filters: ref({'global': {value: null, matchMode: FilterMatchMode.CONTAINS},}),
             expandedRows: ref([]),
             projeto: new Object(),
-            projetos:null,
+            projetos: ref(new Array(4)),
             autores: null,
             selection: []
         }
@@ -231,6 +455,7 @@ export default {
            this.projeto = new Object();
            this.submitted = false;
            this.projetoDialog = true;   
+           this.tabela = false;
            this.getAutores();      
         },
         hideDialog() {
@@ -255,11 +480,40 @@ export default {
                 return data;
             }
         },
+        async getProjetosVencedores(){
+            const req = await fetch('http://localhost:8080/avaliacao/vencedor')
+            if(req.status == 200){
+                const data = await req.json();
+                this.projetos = data;
+                this.tabela = true;
+                this.nota = true;
+            }
+        },
+        async getProjetosAvaliados(){
+            const req = await fetch('http://localhost:8080/avaliacao')
+            if(req.status == 200){
+                const data = await req.json();
+                this.projetos = data;
+                this.tabela = true;
+                this.nota = false;
+            }
+        },
+        async getProjetosEnviados(){
+            const req = await fetch('http://localhost:8080/projeto/enviado')
+            if(req.status == 200){
+                const data = await req.json();
+                this.projetos = data;
+                this.tabela = false;
+                this.nota = false;
+            }
+        },
         async getProjetos() {
             const req = await fetch('http://localhost:8080/projeto');
             if(req.status == 200){
                 const data = await req.json();
-                this.projetos = data;}
+                this.projetos = data;
+                this.tabela = false;
+                this.nota = false;}
         },
         async getAutores() {
             const req = await fetch('http://localhost:8080/autor');
@@ -373,7 +627,8 @@ export default {
         Button,
         Fieldset,
         Dialog,
-        PickList
+        PickList,
+        Skeleton
     }
 }
 </script>

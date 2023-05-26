@@ -2,8 +2,9 @@
     <div class="grid">
         <div class="col-12 lg:col-12 xl:col-12">
             <div v-show="loading" class="card mb-0  align-items-center">
+                <h1 for="chart">Gráfico de projetos</h1>
                 <div class="card flex justify-content-center">
-                    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i> 
+                    <Skeleton shape="circle" size="15rem" class="mr-2"></Skeleton>
                 </div>
             </div>
             <div v-show="!loading" class="card mb-0  align-items-center">
