@@ -241,7 +241,7 @@ export default {
             return value;
         },        
         async getPremios() {
-            const req = await fetch('http://localhost:8080/premio');
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/premio');
             if(req.status === 200){ 
                 const data = await req.json();
                 this.premios = data;

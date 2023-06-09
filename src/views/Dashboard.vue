@@ -29,7 +29,7 @@ onMounted(() => {
 });
 
 async function fetchProjetos() {
-    const req = await fetch('http://localhost:8080/projeto');
+    const req = await fetch('https://jose2550.c41.integrator.host/backend/projeto');
     if(req.status == 200){   
         const data = await req.json();
         projetos = data;

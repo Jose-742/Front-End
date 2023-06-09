@@ -342,22 +342,22 @@ export default {
             }
         },         
         async getAvaliacao() {
-            const req = await fetch('http://localhost:8080/avaliacao');
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/avaliacao');
             const data = await req.json();
             this.avaliacoes = data;
         },
         async getAvaliadores() {
-            const req = await fetch('http://localhost:8080/avaliador');
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/avaliador');
             const data = await req.json();
             this.avaliadores = data;
         },
         async getProjetos() {
-            const req = await fetch('http://localhost:8080/projeto/enviado');
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/projeto/enviado');
             const data = await req.json();
             this.projetos = data;
         },
         async getPremios() {
-            const req = await fetch('http://localhost:8080/premio');
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/premio');
             const data = await req.json();
             this.premios = data;
         },
@@ -377,7 +377,7 @@ export default {
             }       
             const dataJson = JSON.stringify(data); // trnasformando o objeto em string json 
             if(data.id === undefined){
-                const req = await fetch("http://localhost:8080/avaliacao", { // Enviando a requisição
+                const req = await fetch("https://jose2550.c41.integrator.host/backend/avaliacao", { // Enviando a requisição
                     method: "POST",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -386,7 +386,7 @@ export default {
                     this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Cadastrado com sucesso!', life: 3000 });
                     this.avaliacaoDialog = false;}
             }else {
-                const req = await fetch("http://localhost:8080/avaliacao", { // Enviando a requisição
+                const req = await fetch("https://jose2550.c41.integrator.host/backend/avaliacao", { // Enviando a requisição
                     method: "PUT",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -402,7 +402,7 @@ export default {
             this.selectAvaliador = [];
             this.selectProjeto =  [];
             this.selectPremio = [];
-            const req = await fetch('http://localhost:8080/avaliacao/'+avaliacao.id);
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/avaliacao/'+avaliacao.id);
             if(req.status == 200){
                 const data = await req.json();
                 if(data.projeto.premio != null){
@@ -416,7 +416,7 @@ export default {
                 this.toast.add({ severity: 'error', summary: 'Error!', detail: 'Não foi encontrado autor!', life: 3000 });}
         },
         async deleteAvaliacao(){
-            const req = await fetch("http://localhost:8080/avaliacao/delete/"+this.avaliacao.id, { // Enviando a requisição
+            const req = await fetch("https://jose2550.c41.integrator.host/backend/avaliacao/delete/"+this.avaliacao.id, { // Enviando a requisição
                 method: "DELETE",
                 headers:{ "Content-Type": "application/json" }
             }); 

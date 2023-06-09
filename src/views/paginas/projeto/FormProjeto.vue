@@ -481,7 +481,7 @@ export default {
             }
         },
         async getProjetosVencedores(){
-            const req = await fetch('http://localhost:8080/avaliacao/vencedor')
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/avaliacao/vencedor')
             if(req.status == 200){
                 const data = await req.json();
                 this.projetos = data;
@@ -490,7 +490,7 @@ export default {
             }
         },
         async getProjetosAvaliados(){
-            const req = await fetch('http://localhost:8080/avaliacao')
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/avaliacao')
             if(req.status == 200){
                 const data = await req.json();
                 this.projetos = data;
@@ -499,7 +499,7 @@ export default {
             }
         },
         async getProjetosEnviados(){
-            const req = await fetch('http://localhost:8080/projeto/enviado')
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/projeto/enviado')
             if(req.status == 200){
                 const data = await req.json();
                 this.projetos = data;

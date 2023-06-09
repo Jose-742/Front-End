@@ -342,7 +342,7 @@ export default {
             
         },  
         async getAutores() {
-            const req = await fetch('http://localhost:8080/autor');
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/autor');
             if(req.status === 200){ 
                 const data = await req.json();
                 this.autores = data;

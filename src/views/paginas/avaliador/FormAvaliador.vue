@@ -354,7 +354,7 @@ export default {
             
         },  
         async getAvaliadores() {
-            const req = await fetch('http://localhost:8080/avaliador');
+            const req = await fetch('https://jose2550.c41.integrator.host/backend/avaliador');
             if(req.status === 200){ 
                 const data = await req.json();
                 this.avaliadores = data;
