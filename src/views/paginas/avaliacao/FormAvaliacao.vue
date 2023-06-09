@@ -1,4 +1,5 @@
 
+
 <template>
     <div class="grid">
         <div class="col-12">
@@ -29,31 +30,48 @@
                             </span>
                         </div>
                     </template>
-
+               
                         <Column expander style="width: 3rem" />
-
+                     
                         <Column field="Parecer" header="Parecer" :sortable="true" headerStyle="width:55%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Parecer</span> 
-                                {{ slotProps.data.parecer}}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.parecer}}
+                                </span>
                             </template>
                         </Column> 
                         <Column field="nota" header="Nota" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Nota</span> 
-                                {{ slotProps.data.nota }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.nota }}
+                                </span>
                             </template>
                         </Column>
                         <Column field="dataAvaliacao" header="Data avaliação" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Data Avaliação</span>
-                                {{ formatDate(slotProps.data.dataAvaliacao) }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ formatDate(slotProps.data.dataAvaliacao) }}
+                                </span>
                             </template>
                         </Column>
                         <Column  headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editarAvaliacao(slotProps.data)" />
-                                <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2" @click="confirmDeleteAvaliacao(slotProps.data)" />
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editarAvaliacao(slotProps.data)" />
+                                    <Button icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDeleteAvaliacao(slotProps.data)" />
+                                </span>
                             </template>
                         </Column>
                         <template #expansion="slotProps">
@@ -113,22 +131,22 @@
                                                 <h6>Ano</h6>
                                                 <label for="projeto">{{slotProps.data.projeto.premio.ano }}</label>
                                             </div>
-
+                                            
                                         </div>
                                     </Fieldset>
                                 </div>
                             </div>
                         </template>
-
+             
                 </DataTable>
 
-                <Dialog v-model:visible="avaliacaoDialog" :style="{ width: '700px' }" :header="nomeHeader" :modal="true" class="p-fluid">
+                <Dialog v-model:visible="avaliacaoDialog" :style="{ width: '700px' }"  :header="nomeHeader" :modal="true" class="p-fluid">
                     <Fieldset legend="Avaliação">
                         <div class="field">
                             <Fieldset legend="Prêmio">
 
                                 <DataTable v-model:selection="selectPremio" :value="premios" class="p-datatable-sm" dataKey="id"
-                                    responsiveLayout="scroll" tableStyle="min-width: 10rem">
+                                    responsiveLayout="scroll" tableStyle="min-width: 5rem">
                                         <Column selectionMode="single" headerStyle="width: 3rem"></Column>
                                         <Column field="titulo" header="Título" :sortable="true" headerStyle="width:60%; min-width:1rem;">
                                             <template #body="slotProps">
@@ -149,8 +167,8 @@
                         </div>
                         <div class="field">
                             <Fieldset legend="Avaliador">
-
-                                    <DataTable v-model:selection="selectAvaliador" :value="avaliadores" class="p-datatable-sm" dataKey="id"
+                                
+                                    <DataTable v-model:selection="selectAvaliador" :value="avaliadores" class="p-datatable-sm" dataKey="id" style="width: 100%;"
                                     responsiveLayout="scroll" tableStyle="min-width: 10rem">
                                         <Column selectionMode="single" headerStyle="width: 3rem"></Column>
                                         <Column field="perfil" header="Perfil"  headerStyle="width:13%; min-width:3rem;">
@@ -166,7 +184,7 @@
                                         </Column> 
                                         <Column field="cpf" header="CPF"></Column>
                                     </DataTable>
-
+                                    
                             </Fieldset>
                             <small class="p-invalid label-cor" v-if="submitted && selectAvaliador.length == 0">O avaliador é obrigatório.</small>
                         </div>
@@ -248,6 +266,8 @@ import Calendar from 'primevue/calendar';
 import { useToast } from "primevue/usetoast";
 import Button from 'primevue/button';
 import Fieldset from 'primevue/fieldset';
+import Skeleton from 'primevue/skeleton';
+
 export default {
     name: 'FormuAutor',
     data() {
@@ -259,7 +279,7 @@ export default {
             filters: ref({'global': {value: null, matchMode: FilterMatchMode.CONTAINS},}),
             expandedRows: ref([]),
             submitted: false,
-            avaliacoes: null,
+            avaliacoes: ref(new Array(4)),
             avaliacao: new Object(),
             avaliadores: null,
             projetos: null,
@@ -322,22 +342,22 @@ export default {
             }
         },         
         async getAvaliacao() {
-            const req = await fetch('https://jose2550.c41.integrator.host/backend/avaliacao');
+            const req = await fetch('http://localhost:8080/avaliacao');
             const data = await req.json();
             this.avaliacoes = data;
         },
         async getAvaliadores() {
-            const req = await fetch('https://jose2550.c41.integrator.host/backend/avaliador');
+            const req = await fetch('http://localhost:8080/avaliador');
             const data = await req.json();
             this.avaliadores = data;
         },
         async getProjetos() {
-            const req = await fetch('https://jose2550.c41.integrator.host/backend/projeto/enviado');
+            const req = await fetch('http://localhost:8080/projeto/enviado');
             const data = await req.json();
             this.projetos = data;
         },
         async getPremios() {
-            const req = await fetch('https://jose2550.c41.integrator.host/backend/premio');
+            const req = await fetch('http://localhost:8080/premio');
             const data = await req.json();
             this.premios = data;
         },
@@ -357,7 +377,7 @@ export default {
             }       
             const dataJson = JSON.stringify(data); // trnasformando o objeto em string json 
             if(data.id === undefined){
-                const req = await fetch("https://jose2550.c41.integrator.host/backend/avaliacao", { // Enviando a requisição
+                const req = await fetch("http://localhost:8080/avaliacao", { // Enviando a requisição
                     method: "POST",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -366,7 +386,7 @@ export default {
                     this.toast.add({ severity: 'success', summary: 'Sucesso!', detail: 'Cadastrado com sucesso!', life: 3000 });
                     this.avaliacaoDialog = false;}
             }else {
-                const req = await fetch("https://jose2550.c41.integrator.host/backend/avaliacao", { // Enviando a requisição
+                const req = await fetch("http://localhost:8080/avaliacao", { // Enviando a requisição
                     method: "PUT",
                     headers:{ "Content-Type": "application/json" },
                     body: dataJson
@@ -382,7 +402,7 @@ export default {
             this.selectAvaliador = [];
             this.selectProjeto =  [];
             this.selectPremio = [];
-            const req = await fetch('https://jose2550.c41.integrator.host/backend/avaliacao/'+avaliacao.id);
+            const req = await fetch('http://localhost:8080/avaliacao/'+avaliacao.id);
             if(req.status == 200){
                 const data = await req.json();
                 if(data.projeto.premio != null){
@@ -396,7 +416,7 @@ export default {
                 this.toast.add({ severity: 'error', summary: 'Error!', detail: 'Não foi encontrado autor!', life: 3000 });}
         },
         async deleteAvaliacao(){
-            const req = await fetch("https://jose2550.c41.integrator.host/backend/avaliacao/delete/"+this.avaliacao.id, { // Enviando a requisição
+            const req = await fetch("http://localhost:8080/avaliacao/delete/"+this.avaliacao.id, { // Enviando a requisição
                 method: "DELETE",
                 headers:{ "Content-Type": "application/json" }
             }); 
@@ -420,7 +440,8 @@ export default {
         Calendar,
         Button,
         Fieldset,
-        Dialog
+        Dialog,
+        Skeleton
     }
 };
 </script>

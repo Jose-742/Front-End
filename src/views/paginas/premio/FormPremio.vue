@@ -42,44 +42,73 @@
                         </Column>-->
                         <Column field="nome" header="Nome" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Nome</span>
-                                {{ slotProps.data.nome }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.nome }}
+                                </span>
                             </template>
                         </Column>
                         <Column field="descricao" header="Descrição" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Descrição</span>
-                                {{ slotProps.data.descricao }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.descricao }}
+                                </span>
                             </template>
                         </Column>
                         <Column field="cronograma" header="Cronograma data início" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Cronograma Data Início</span>
-                                {{ formatDate(slotProps.data.cronograma.dataInicio) }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ formatDate(slotProps.data.cronograma.dataInicio) }}
+                                </span>
                             </template>
                         </Column> 
                         <Column field="cronograma" header="Cronograma data fim" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Cronograma data fim</span>
-                                {{ formatDate(slotProps.data.cronograma.dataFim) }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ formatDate(slotProps.data.cronograma.dataFim) }}
+                                </span>
                             </template>
                         </Column>
                         <Column field="cronograma" header="Cronograma descrição" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Cronograma descrição</span>
-                                {{slotProps.data.cronograma.descricao }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{slotProps.data.cronograma.descricao }}
+                                </span>
                             </template>
                         </Column>
                         <Column field="ano" header="Ano" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Ano</span>
-                                {{slotProps.data.ano }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{slotProps.data.ano }}
+                                </span>
                             </template>
                         </Column>
                         <Column  headerStyle="min-width:10rem;">
                             <template #body="slotProps">
-                                <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editarPremio(slotProps.data)" />
-                                <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2" @click="confirmDeletePremio(slotProps.data)" />
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editarPremio(slotProps.data)" />
+                                    <Button icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDeletePremio(slotProps.data)" />
+                                </span>
                             </template>
                         </Column>
              
@@ -156,6 +185,7 @@ import Calendar from 'primevue/calendar';
 import { useToast } from "primevue/usetoast";
 import Button from 'primevue/button';
 import Fieldset from 'primevue/fieldset';
+import Skeleton from 'primevue/skeleton';
 
 export default {
     name: 'FormPremio',
@@ -167,7 +197,7 @@ export default {
             deletePremioDialog: false,
             filters: ref({'global': {value: null, matchMode: FilterMatchMode.CONTAINS},}),
             submitted: false,
-            premios: null,
+            premios: ref(new Array(4)),
             premio: new Object(),
             cronograma: new Object()
         };
@@ -211,9 +241,11 @@ export default {
             return value;
         },        
         async getPremios() {
-            const req = await fetch('https://jose2550.c41.integrator.host/backend/premio');
-            const data = await req.json();
-            this.premios = data;
+            const req = await fetch('http://localhost:8080/premio');
+            if(req.status === 200){ 
+                const data = await req.json();
+                this.premios = data;
+            }
         },
         async salvarPremio(){
             this.submitted =true;                    
@@ -288,7 +320,8 @@ export default {
         Calendar,
         Button,
         Fieldset,
-        Dialog
+        Dialog,
+        Skeleton
     }
 };
 </script>

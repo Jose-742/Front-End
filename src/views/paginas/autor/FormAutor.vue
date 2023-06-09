@@ -40,43 +40,73 @@
                         </Column>-->  
                         <Column field="perfil" header="Perfil" headerStyle="width:1%; min-width:10rem;">
                             <template #body="slotProps">
-                                <img :alt="slotProps.data.nome" :src="'demo/images/avatar/user.png'" width="32" style="vertical-align: middle" />
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    <img :alt="slotProps.data.nome" :src="'demo/images/avatar/user.png'" width="32" style="vertical-align: middle" />
+                                </span>
                             </template>
                         </Column> 
                         <Column field="nome" header="Nome completo" :sortable="true" headerStyle="width:15%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Nome completo</span> 
-                                {{ slotProps.data.nome }} {{slotProps.data.sobrenome }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                 {{ slotProps.data.nome }} {{slotProps.data.sobrenome }}
+                                </span>
                             </template>
                         </Column> 
                         <Column field="cpf" header="CPF" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">CPF</span>
-                                {{ slotProps.data.cpf }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.cpf }}
+                                </span>
                             </template>
                         </Column>
                         <Column field="dataNascimento" header="Data nascimento" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Data nascimento</span>
-                                {{ formatDate(slotProps.data.dataNascimento) }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ formatDate(slotProps.data.dataNascimento) }}
+                                </span>
                             </template>
                         </Column>
                         <Column field="contato" header="Contato" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">Contato</span>
-                                {{ slotProps.data.telefone }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.telefone }}
+                                </span>
                             </template>
                         </Column> 
                         <Column field="email" header="E-mail" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                             <template #body="slotProps">
-                                <span class="p-column-title">E-mail</span>
-                                {{ slotProps.data.email }}
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    {{ slotProps.data.email }}
+                                </span>
                             </template>
                         </Column>
                         <Column  headerStyle="min-width:10rem;">
                             <template #body="slotProps">
-                                <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editarAutor(slotProps.data)" />
-                                <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2" @click="confirmDeleteAutor(slotProps.data)" />
+                                <span v-if="slotProps.data == null">
+                                    <Skeleton></Skeleton>
+                                </span>
+                                <span v-else>
+                                    <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" @click="editarAutor(slotProps.data)" />
+                                    <Button icon="pi pi-trash" class="p-button-rounded p-button-danger mt-2" @click="confirmDeleteAutor(slotProps.data)" />
+                                </span>
                             </template>
                         </Column> 
                         <template #expansion="slotProps">
@@ -237,6 +267,7 @@ import Calendar from 'primevue/calendar';
 import { useToast } from "primevue/usetoast";
 import Button from 'primevue/button';
 import Fieldset from 'primevue/fieldset';
+import Skeleton from 'primevue/skeleton';
 
 export default {
     name: 'FormuAutor',
@@ -250,7 +281,7 @@ export default {
             filters: ref({'global': {value: null, matchMode: FilterMatchMode.CONTAINS},}),
             expandedRows: ref([]),
             submitted: false,
-            autores: null,
+            autores: ref(new Array(4)),
             autor: new Object(),
             endereco: new Object()
         };
@@ -311,9 +342,11 @@ export default {
             
         },  
         async getAutores() {
-            const req = await fetch('https://jose2550.c41.integrator.host/backend/autor');
-            const data = await req.json();
-            this.autores = data;
+            const req = await fetch('http://localhost:8080/autor');
+            if(req.status === 200){ 
+                const data = await req.json();
+                this.autores = data;
+            }
         },
         async salvarAutor(){
             this.submitted =true;                    
@@ -389,7 +422,8 @@ export default {
         Calendar,
         Button,
         Fieldset,
-        Dialog
+        Dialog,
+        Skeleton
     }
 };
 </script>
